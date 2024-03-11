@@ -56,7 +56,7 @@ from transformers import (
     CLIPVisionModelWithProjection,
 )
 
-from invokeai.app.services.config import InvokeAIAppConfig
+from invokeai.app.services.config.config_default import get_config
 from invokeai.backend.model_manager import BaseModelType, ModelVariantType
 from invokeai.backend.util.logging import InvokeAILogger
 
@@ -73,7 +73,8 @@ if is_accelerate_available():
     from accelerate.utils import set_module_tensor_to_device
 
 logger = InvokeAILogger.get_logger(__name__)
-CONVERT_MODEL_ROOT = InvokeAIAppConfig.get_config().models_path / "core/convert"
+config = get_config()
+CONVERT_MODEL_ROOT = config.models_path / "core/convert"
 
 
 def install_dependencies():
