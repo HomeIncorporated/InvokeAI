@@ -7,21 +7,25 @@ import sys
 from invokeai.app.services.config import InvokeAIAppConfig
 
 
+def validate_root_structure(config: InvokeAIAppConfig) -> None:
+    assert config.db_path.parent.exists(), f"{config.db_path.parent} not found"
+    assert config.models_path.exists(), f"{config.models_path} not found"
+    if not config.ignore_missing_core_models:
+        for model in [
+            "CLIP-ViT-bigG-14-laion2B-39B-b160k",
+            "bert-base-uncased",
+            "clip-vit-large-patch14",
+            "sd-vae-ft-mse",
+            "stable-diffusion-2-clip",
+            "stable-diffusion-safety-checker",
+        ]:
+            path = config.models_path / f"core/convert/{model}"
+            assert path.exists(), f"{path} is missing"
+
+
 def check_invokeai_root(config: InvokeAIAppConfig):
     try:
-        assert config.db_path.parent.exists(), f"{config.db_path.parent} not found"
-        assert config.models_path.exists(), f"{config.models_path} not found"
-        if not config.ignore_missing_core_models:
-            for model in [
-                "CLIP-ViT-bigG-14-laion2B-39B-b160k",
-                "bert-base-uncased",
-                "clip-vit-large-patch14",
-                "sd-vae-ft-mse",
-                "stable-diffusion-2-clip",
-                "stable-diffusion-safety-checker",
-            ]:
-                path = config.models_path / f"core/convert/{model}"
-                assert path.exists(), f"{path} is missing"
+        validate_root_structure(config)
     except Exception as e:
         print()
         print(f"An exception has occurred: {str(e)}")
