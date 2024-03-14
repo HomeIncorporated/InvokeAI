@@ -13,10 +13,12 @@ from pydantic.networks import Url
 from invokeai.app.services.config import InvokeAIAppConfig
 from invokeai.app.services.events.events_base import EventServiceBase
 from invokeai.app.services.model_install import (
+    ModelInstallServiceBase,
+)
+from invokeai.app.services.model_install.model_install_common import (
     InstallStatus,
     LocalModelSource,
     ModelInstallJob,
-    ModelInstallServiceBase,
     URLModelSource,
 )
 from invokeai.app.services.model_records import UnknownModelException
