@@ -9,12 +9,14 @@ export const addModelLoadEventListener = (startAppListening: AppStartListening) 
     actionCreator: socketModelLoadStarted,
     effect: (action) => {
       const { config, submodel_type } = action.payload.data;
+      const { name, base, type } = config;
 
-      let message = `Model load started: ${config.name} (${config.key})`;
-
+      const extras: string[] = [base, type];
       if (submodel_type) {
-        message = message.concat(`/${submodel_type}`);
+        extras.push(submodel_type);
       }
+
+      const message = `Model load started: ${name} (${extras.join(', ')})`;
 
       log.debug(action.payload, message);
     },
@@ -24,12 +26,14 @@ export const addModelLoadEventListener = (startAppListening: AppStartListening) 
     actionCreator: socketModelLoadComplete,
     effect: (action) => {
       const { config, submodel_type } = action.payload.data;
+      const { name, base, type } = config;
 
-      let message = `Model load complete: ${config.name} (${config.key})`;
-
+      const extras: string[] = [base, type];
       if (submodel_type) {
-        message = message.concat(`/${submodel_type}`);
+        extras.push(submodel_type);
       }
+
+      const message = `Model load complete: ${name} (${extras.join(', ')})`;
 
       log.debug(action.payload, message);
     },
