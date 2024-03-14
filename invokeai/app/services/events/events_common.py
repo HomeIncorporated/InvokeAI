@@ -397,7 +397,7 @@ class ModelLoadStartedEvent(ModelEventBase):
     submodel_type: Optional[SubModelType] = Field(default=None, description="The submodel type, if any")
 
     @classmethod
-    def build(cls, config: AnyModelConfig, submodel_type: SubModelType) -> "ModelLoadStartedEvent":
+    def build(cls, config: AnyModelConfig, submodel_type: Optional[SubModelType] = None) -> "ModelLoadStartedEvent":
         return cls(config=config, submodel_type=submodel_type)
 
 
@@ -411,7 +411,7 @@ class ModelLoadCompleteEvent(ModelEventBase):
     submodel_type: Optional[SubModelType] = Field(default=None, description="The submodel type, if any")
 
     @classmethod
-    def build(cls, config: AnyModelConfig, submodel_type: SubModelType) -> "ModelLoadCompleteEvent":
+    def build(cls, config: AnyModelConfig, submodel_type: Optional[SubModelType] = None) -> "ModelLoadCompleteEvent":
         return cls(config=config, submodel_type=submodel_type)
 
 

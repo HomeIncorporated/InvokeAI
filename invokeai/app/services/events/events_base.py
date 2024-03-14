@@ -1,7 +1,7 @@
 # Copyright (c) 2022 Kyle Schouviller (https://github.com/kyle0654)
 
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from invokeai.app.services.events.events_common import (
     BatchEnqueuedEvent,
@@ -128,10 +128,10 @@ class EventServiceBase:
 
     # region Model loading
 
-    def emit_model_load_started(self, config: "AnyModelConfig", submodel_type: "SubModelType") -> None:
+    def emit_model_load_started(self, config: "AnyModelConfig", submodel_type: Optional["SubModelType"] = None) -> None:
         self.dispatch(ModelLoadStartedEvent.build(config, submodel_type))
 
-    def emit_model_load_complete(self, config: "AnyModelConfig", submodel_type: "SubModelType") -> None:
+    def emit_model_load_complete(self, config: "AnyModelConfig", submodel_type: Optional["SubModelType"] = None) -> None:
         self.dispatch(ModelLoadCompleteEvent.build(config, submodel_type))
 
     # endregion
