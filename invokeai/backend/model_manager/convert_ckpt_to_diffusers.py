@@ -57,6 +57,7 @@ from transformers import (
 )
 
 from invokeai.app.services.config.config_default import get_config
+from invokeai.backend.install.check_root import get_missing_core_models
 from invokeai.backend.model_manager import BaseModelType, ModelVariantType
 from invokeai.backend.util.logging import InvokeAILogger
 
@@ -81,16 +82,11 @@ def install_dependencies():
     """
     Check for, and install, missing model dependencies.
     """
-    conversion_models = [
-        "clip-vit-large-patch14",
-        "CLIP-ViT-H-14-laion2B-s32B-b79K",
-        "stable-diffusion-2-clip",
-        "stable-diffusion-safety-checker",
-        "CLIP-ViT-bigG-14-laion2B-39B-b160k",
-        "bert-base-uncased",
-    ]
-    if any(not (CONVERT_MODEL_ROOT / x).exists() for x in conversion_models):
-        logger.warning("Installing missing core safetensor conversion models")
+
+    missing_core_models = get_missing_core_models(get_config())
+    if len(missing_core_models) > 0:
+        joined_models = ", ".join(missing_core_models)
+        logger.warning(f"Installing missing core safetensor conversion models: {joined_models}")
         from invokeai.backend.install.invokeai_configure import download_conversion_models  # noqa
 
         download_conversion_models()
