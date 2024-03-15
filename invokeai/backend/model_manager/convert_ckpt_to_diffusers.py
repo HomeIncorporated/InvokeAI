@@ -57,7 +57,6 @@ from transformers import (
 )
 
 from invokeai.app.services.config.config_default import get_config
-from invokeai.backend.install.check_root import get_missing_core_models
 from invokeai.backend.model_manager import BaseModelType, ModelVariantType
 from invokeai.backend.util.logging import InvokeAILogger
 
@@ -76,20 +75,6 @@ if is_accelerate_available():
 logger = InvokeAILogger.get_logger(__name__)
 config = get_config()
 CONVERT_MODEL_ROOT = config.models_path / "core/convert"
-
-
-def install_dependencies():
-    """
-    Check for, and install, missing model dependencies.
-    """
-
-    missing_core_models = get_missing_core_models(get_config())
-    if len(missing_core_models) > 0:
-        joined_models = ", ".join(missing_core_models)
-        logger.warning(f"Installing missing core safetensor conversion models: {joined_models}")
-        from invokeai.backend.install.invokeai_configure import download_conversion_models  # noqa
-
-        download_conversion_models()
 
 
 def shave_segments(path, n_shave_prefix_segments=1):
@@ -1713,8 +1698,6 @@ def download_controlnet_from_original_ckpt(
 
 
 def convert_ldm_vae_to_diffusers(checkpoint, vae_config: DictConfig, image_size: int) -> AutoencoderKL:
-    install_dependencies()
-
     vae_config = create_vae_diffusers_config(vae_config, image_size=image_size)
 
     converted_vae_checkpoint = convert_ldm_vae_checkpoint(checkpoint, vae_config)
@@ -1735,7 +1718,6 @@ def convert_ckpt_to_diffusers(
     and in addition a path-like object indicating the location of the desired diffusers
     model to be written.
     """
-    install_dependencies()
     pipe = download_from_original_stable_diffusion_ckpt(checkpoint_path, **kwargs)
 
     # TO DO: save correct repo variant
@@ -1755,7 +1737,6 @@ def convert_controlnet_to_diffusers(
     and in addition a path-like object indicating the location of the desired diffusers
     model to be written.
     """
-    install_dependencies()
     pipe = download_controlnet_from_original_ckpt(checkpoint_path, **kwargs)
 
     # TO DO: save correct repo variant
